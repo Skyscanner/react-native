@@ -8,6 +8,7 @@
 #include <cxxreact/JSBigString.h>
 #include <cxxreact/ModuleRegistry.h>
 #include <cxxreact/ReactMarker.h>
+#include <react/jni/JReactMarker.h>
 #include <cxxreact/SystraceSection.h>
 #include <folly/Conv.h>
 #include <folly/json.h>
@@ -162,20 +163,18 @@ void JSIExecutor::loadApplicationScript(
     runtimeInstaller_(*runtime_);
   }
 
-  bool hasLogger(ReactMarker::logTaggedMarker);
   std::string scriptName = simpleBasename(sourceURL);
-  if (hasLogger) {
-    ReactMarker::logTaggedMarker(
-        ReactMarker::RUN_JS_BUNDLE_START, scriptName.c_str());
-  }
+
+  JReactMarker::logPerfMarker(
+      ReactMarker::RUN_JS_BUNDLE_START, scriptName.c_str());
+
   runtime_->evaluateJavaScript(
       std::make_unique<BigStringBuffer>(std::move(script)), sourceURL);
   flush();
-  if (hasLogger) {
-    ReactMarker::logMarker(ReactMarker::CREATE_REACT_CONTEXT_STOP);
-    ReactMarker::logTaggedMarker(
-        ReactMarker::RUN_JS_BUNDLE_STOP, scriptName.c_str());
-  }
+
+  JReactMarker::logPerfMarker(ReactMarker::CREATE_REACT_CONTEXT_STOP, nullptr);
+  JReactMarker::logPerfMarker(
+      ReactMarker::RUN_JS_BUNDLE_STOP, scriptName.c_str());
 }
 
 void JSIExecutor::setBundleRegistry(std::unique_ptr<RAMBundleRegistry> r) {
@@ -200,7 +199,7 @@ void JSIExecutor::registerBundle(
     uint32_t bundleId,
     const std::string& bundlePath) {
   const auto tag = folly::to<std::string>(bundleId);
-  ReactMarker::logTaggedMarker(
+  JReactMarker::logPerfMarker(
       ReactMarker::REGISTER_JS_SEGMENT_START, tag.c_str());
   if (bundleRegistry_) {
     bundleRegistry_->registerBundle(bundleId, bundlePath);
@@ -210,7 +209,7 @@ void JSIExecutor::registerBundle(
         std::make_unique<BigStringBuffer>(std::move(script)),
         JSExecutor::getSyntheticBundlePath(bundleId, bundlePath));
   }
-  ReactMarker::logTaggedMarker(
+  JReactMarker::logPerfMarker(
       ReactMarker::REGISTER_JS_SEGMENT_STOP, tag.c_str());
 }
 

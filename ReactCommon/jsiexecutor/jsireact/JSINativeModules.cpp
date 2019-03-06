@@ -11,6 +11,8 @@
 
 #include <string>
 
+#include <react/jni/JReactMarker.h>
+
 using namespace facebook::jsi;
 
 namespace facebook {
@@ -52,11 +54,9 @@ void JSINativeModules::reset() {
 folly::Optional<Object> JSINativeModules::createModule(
     Runtime& rt,
     const std::string& name) {
-  bool hasLogger(ReactMarker::logTaggedMarker);
-  if (hasLogger) {
-    ReactMarker::logTaggedMarker(
-        ReactMarker::NATIVE_MODULE_SETUP_START, name.c_str());
-  }
+
+  JReactMarker::logPerfMarker(
+      ReactMarker::NATIVE_MODULE_SETUP_START, name.c_str());
 
   if (!m_genNativeModuleJS) {
     m_genNativeModuleJS =
@@ -77,10 +77,8 @@ folly::Optional<Object> JSINativeModules::createModule(
   folly::Optional<Object> module(
       moduleInfo.asObject(rt).getPropertyAsObject(rt, "module"));
 
-  if (hasLogger) {
-    ReactMarker::logTaggedMarker(
-        ReactMarker::NATIVE_MODULE_SETUP_STOP, name.c_str());
-  }
+  JReactMarker::logPerfMarker(
+      ReactMarker::NATIVE_MODULE_SETUP_STOP, name.c_str());
 
   return module;
 }
