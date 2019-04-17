@@ -6,7 +6,7 @@
 
 require "json"
 
-package = JSON.parse(File.read(File.join(__dir__, "..", "..", "package.json")))
+package = JSON.parse(File.read(File.join(__dir__, "..", "..", "..", "package.json")))
 version = package['version']
 
 source = { :git => 'https://github.com/facebook/react-native.git' }
@@ -22,7 +22,7 @@ folly_version = '2018.10.22.00'
 boost_compiler_flags = '-Wno-documentation'
 
 Pod::Spec.new do |s|
-  s.name                   = "React-cxxreact"
+  s.name                   = "React-turbomodule-samples"
   s.version                = version
   s.summary                = "-"  # TODO
   s.homepage               = "http://facebook.github.io/react-native/"
@@ -31,14 +31,20 @@ Pod::Spec.new do |s|
   s.platforms              = { :ios => "9.0", :tvos => "9.2" }
   s.source                 = source
   s.source_files           = "*.{cpp,h}"
-  s.exclude_files          = "SampleCxxModule.*"
   s.compiler_flags         = folly_compiler_flags + ' ' + boost_compiler_flags
   s.pod_target_xcconfig    = { "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost-for-react-native\" \"$(PODS_ROOT)/DoubleConversion\" \"$(PODS_ROOT)/Folly\"" }
-  s.header_dir             = "cxxreact"
+  s.header_dir             = "jsireact"
+  s.xcconfig               = { "OTHER_CFLAGS" => "$(inherited) -DRN_TURBO_MODULE_ENABLED" }
 
-  s.dependency "boost-for-react-native", "1.63.0"
+  s.dependency "React-Core", version
   s.dependency "DoubleConversion"
+  s.dependency "React-cxxreact", version
+  s.dependency "React-jsi", version
+  s.dependency "React-turbomodule-core", version
   s.dependency "Folly", folly_version
-  s.dependency "glog"
-  s.dependency "React-jsinspector", version
+
+  s.subspec "samples-ios" do |ss|
+    ss.source_files   = "platform/ios/*.{mm,cpp,h}"
+    ss.header_dir     = "jsireact"
+  end
 end
