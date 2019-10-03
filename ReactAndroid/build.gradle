@@ -275,15 +275,12 @@ task cleanReactNdkLib(type: Exec) {
 task packageReactNdkLibs(dependsOn: buildReactNdkLib, type: Copy) {
     from("$buildDir/react-ndk/all")
     into("$buildDir/react-ndk/exported")
-    exclude("**/libjsc.so")
-    exclude("**/libhermes.so")
     exclude("**/libc++_shared.so")
-    if (VERSION_NAME.contains("-release") == true) {
-        exclude("**/libhermes-inspector.so")
-        exclude("**/libhermes-executor-debug.so")
-    } else if (VERSION_NAME.contains("-debug") == true) {
-        exclude("**/libhermes-executor-release.so")
-    }
+    exclude("**/libjsc.so")
+    exclude("**/libjscexecutor.so")
+    exclude("**/libhermes.so")
+    exclude("**/libhermes-inspector.so")
+    exclude("**/libhermes-executor-debug.so")
 }
 
 task packageReactNdkLibsForBuck(dependsOn: packageReactNdkLibs, type: Copy) {
