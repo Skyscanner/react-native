@@ -33,6 +33,7 @@ std::unique_ptr<JSExecutor> JSCExecutorFactory::createJSExecutor(
       delegate,
       JSIExecutor::defaultTimeoutInvoker,
       std::move(installBindings));
+      logTaggedMarker_);
 }
 
 } // namespace react
