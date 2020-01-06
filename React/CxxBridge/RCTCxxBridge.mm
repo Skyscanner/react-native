@@ -229,8 +229,6 @@ struct RCTInstanceCallback : public InstanceCallback {
     _parentBridge = bridge;
     _performanceLogger = [bridge performanceLogger];
 
-    registerPerformanceLoggerHooks(_performanceLogger);
-
     /**
      * Set Initial State
      */
