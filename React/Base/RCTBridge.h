@@ -68,6 +68,25 @@ RCT_EXTERN NSString *const RCTDidSetupModuleNotificationModuleNameKey;
 RCT_EXTERN NSString *const RCTDidSetupModuleNotificationSetupTimeKey;
 
 /**
+ * This notification fires when JS bundle is executed. The
+ * `RCTDidRunJsBundleNotificationScriptNameKey` key will contain a reference to the module name and
+ * `RCTDidRunJsBundleNotificationSetupTimeKey` will contain the setup time in ms.
+ */
+RCT_EXTERN NSString *const RCTDidRunJsBundleNotification;
+
+/**
+ * Key for the script name (NSString) in the
+ * RCTDidRunJsBundleNotification userInfo dictionary.
+ */
+RCT_EXTERN NSString *const RCTDidRunJsBundleNotificationScriptNameKey;
+
+/**
+ * Key for the setup time (NSNumber) in the
+ * RCTDidRunJsBundleNotification userInfo dictionary.
+ */
+RCT_EXTERN NSString *const RCTDidRunJsBundleNotificationScriptTimeKey;
+
+/**
  * This notification fires just before the bridge starts processing a request to
  * reload.
  */

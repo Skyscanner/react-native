@@ -110,6 +110,19 @@ static void notifyAboutModuleSetup(RCTPerformanceLogger *performanceLogger, cons
   }
 }
 
+static void notifyAboutRunJsBundle(RCTPerformanceLogger *performanceLogger, const char *tag) {
+  NSString *scriptName = [[NSString alloc] initWithUTF8String:tag];
+  if (scriptName) {
+    int64_t setupTime = [performanceLogger durationForTag:RCTPLScriptExecution];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RCTDidRunJsBundleNotification
+                                                        object:nil
+                                                      userInfo:@{
+                                                                 RCTDidRunJsBundleNotificationScriptNameKey: scriptName,
+                                                                 RCTDidRunJsBundleNotificationScriptTimeKey: @(setupTime)
+                                                                 }];
+  }
+}
+
 static ReactMarker::LogTaggedMarker getPerformanceLoggerHooks(RCTPerformanceLogger *performanceLogger) {
   __weak RCTPerformanceLogger *weakPerformanceLogger = performanceLogger;
   return [weakPerformanceLogger](const ReactMarker::ReactMarkerId markerId, const char *__unused tag) {
@@ -119,6 +132,7 @@ static ReactMarker::LogTaggedMarker getPerformanceLoggerHooks(RCTPerformanceLogg
         break;
       case ReactMarker::RUN_JS_BUNDLE_STOP:
         [weakPerformanceLogger markStopForTag:RCTPLScriptExecution];
+        notifyAboutRunJsBundle(weakPerformanceLogger, tag);
         break;
       case ReactMarker::NATIVE_REQUIRE_START:
         [weakPerformanceLogger appendStartForTag:RCTPLRAMNativeRequires];
