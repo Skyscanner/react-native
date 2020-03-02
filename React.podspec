@@ -43,6 +43,7 @@ Pod::Spec.new do |s|
   s.cocoapods_version      = ">= 1.2.0"
 
   s.dependency "React-Core", version
+  s.dependency "React-CoreModules", version
   s.dependency "React-Core/DevSupport", version
   s.dependency "React-Core/RCTWebSocket", version
   s.dependency "React-RCTActionSheet", version
