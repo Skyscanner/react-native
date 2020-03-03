@@ -11,14 +11,11 @@ import com.facebook.jni.HybridData;
 import com.facebook.react.bridge.JavaScriptExecutor;
 import com.facebook.soloader.SoLoader;
 import javax.annotation.Nullable;
-import com.facebook.react.bridge.ReactMarker;
-import com.facebook.react.bridge.ReactMarkerConstants;
 
 public class HermesExecutor extends JavaScriptExecutor {
   private static String mode_;
 
   static {
-    ReactMarker.logMarker(ReactMarkerConstants.LOAD_HERMES_SO_FILE_START);
     // libhermes must be loaded explicitly to invoke its JNI_OnLoad.
     SoLoader.loadLibrary("hermes");
     try {
@@ -28,7 +25,6 @@ public class HermesExecutor extends JavaScriptExecutor {
       SoLoader.loadLibrary("hermes-executor-debug");
       mode_ = "Debug";
     }
-    ReactMarker.logMarker(ReactMarkerConstants.LOAD_HERMES_SO_FILE_END);
   }
 
   HermesExecutor(@Nullable RuntimeConfig config) {
